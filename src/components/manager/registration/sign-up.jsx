@@ -2,8 +2,9 @@ import React,{useState} from 'react';
 import { makeStyles,Container,Grid, Checkbox,FormControlLabel,TextField,CssBaseline,Button,Avatar,Typography} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert} from '@material-ui/lab';
-import {Link} from 'react-router-dom'
-
+import { connect } from 'react-redux';
+import {useHistory} from 'react-router-dom'
+import { RegisterEmployeeAction } from '../../../redux/actions/RegisterAction';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,16 +31,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function SignUp() {
+function SignUp(props) {
 
+    const { userState,register} = props;
+    const history = useHistory();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if(valid.firstName === false && valid.lastName === false && valid.password === false && valid.email === false && valid.confirmPassword === false && user.terms === true){
             setValidForm(true);
-            console.log('Current State is: ' + JSON.stringify(user));
-            alert('Current State is: ' + JSON.stringify(user));
-            setUser({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',terms:false})
+            console.log(userState);
+            const newUser = {
+                firstName:user.firstName,
+                lastName:user.lastName,
+                email:user.email,
+                password:user.password,
+                rol:"USER"
+            }
+            register(newUser,history);
         } else {
             setValidForm(false)
         }
@@ -101,7 +110,7 @@ export default function SignUp() {
                 }
             }
         }
-        if(user.email.length > 0){
+        if(user.password.length > 0){
             if(name === 'password'){
                 if(regularExpression.password.test(user[name])){
                     valid[name]=false;
@@ -113,6 +122,9 @@ export default function SignUp() {
             }
         }
     } 
+
+
+
     const validatePassword=(e)=>{
         if(user.password.length > 0){
             if(user.password !== user.confirmPassword){
@@ -256,13 +268,11 @@ export default function SignUp() {
             >
                 Sign Up
             </Button>
+            {userState.errMess === true && <Alert severity="error">Ocurrio un errror no se pudo realizar el registro</Alert>}
             {validForm === false && <Alert severity="error">Debes aceptar los terminos y condiciones para registrarte</Alert>}
-            {validForm === true && <Alert severity="success">Te has registrado correctamente</Alert>}
+            {userState.errMes === false && <Alert severity="success">Te has registrado correctamente</Alert>}
             <Grid container justifyContent="flex-end">
                 <Grid item>
-                <Link to="-sign-in" variant="body2" className={classes.link}>
-                    Already have an account? Sign in
-                </Link>
                 </Grid>
             </Grid>
             </form>
@@ -270,3 +280,19 @@ export default function SignUp() {
         </Container>
     );
 }
+
+const mapStatetoProps = (state) =>{
+    return{
+        userState:state.register,
+
+    }
+}
+
+const mapDispatchToProps = (dispatch) =>{
+    return {
+        register:(user,history) => {
+            dispatch(RegisterEmployeeAction(user,history)) //manda la informacion del formulario al metodo hecho en redux donde utlizamos axios, utlizando dispatch se manda los datos
+        }
+    }
+}
+export default connect(mapStatetoProps,mapDispatchToProps)(SignUp);

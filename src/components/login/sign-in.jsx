@@ -1,7 +1,10 @@
 import React,{ useState }  from 'react';
-import{ makeStyles,Container,Typography, Grid,Checkbox,FormControlLabel,TextField,CssBaseline,Button,Avatar } from '@material-ui/core';
+import{ makeStyles,Container,Typography, Grid,TextField,CssBaseline,Button,Avatar } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import {Link} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
+import {connect} from 'react-redux';
+import { LoginAuthAction } from '../../redux/actions/AuthAction';
+
 
   
 const useStyles = makeStyles((theme) => ({
@@ -28,12 +31,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
   
-export default function SignIn() {
+function SignIn(props) {
 
     const handleSubmit = (event) => {
-        console.log('Current State is: ' + JSON.stringify(body));
-        alert('Current State is: ' + JSON.stringify(body));
         event.preventDefault();
+        console.log('Current State is: ' + JSON.stringify(body));
+        login(body,history);
     }
     
     const handleChange = (e) => {
@@ -44,7 +47,9 @@ export default function SignIn() {
         })
     }
     
-    const [body,setBoyd] = useState({email:'',password:'',remember:false})
+    const {login} = props;
+    const [body,setBoyd] = useState({email:'',password:''})
+    const history = useHistory();
     const classes = useStyles();
     return (
         <Container component="main" maxWidth="xs" className={classes.container}>
@@ -84,14 +89,6 @@ export default function SignIn() {
                 value={body.password}
                 onChange={handleChange}
             />
-            <FormControlLabel
-                control={<Checkbox  
-                    name="remember"
-                    checked={body.remember}
-                    onChange={handleChange} color="primary" />}
-                label="Remember me"
-               
-            />
             <Button
                 type="submit"
                 fullWidth
@@ -103,14 +100,8 @@ export default function SignIn() {
             </Button>
             <Grid container>
                 <Grid item xs>
-                <Link to="/sign-up" variant="body2" className={classes.link}>
-                    Forgot password?
-                </Link>
                 </Grid>
                 <Grid item>
-                <Link to="/sign-up" variant="body2" className={classes.link}>
-                    {"Don't have an account? Sign Up"}
-                </Link>
                 </Grid>
             </Grid>
             </form>
@@ -118,3 +109,20 @@ export default function SignIn() {
         </Container>
     );
 }
+
+
+const mapStatetoProps = (state) =>{
+    return{
+      auth:state.auth
+    }
+  }
+  
+  const mapDispatchToProps = (dispatch) =>{
+    return {
+        login:(user,history) => {
+            dispatch(LoginAuthAction(user,history)) //manda el usuario y el historial para que cuando se valide el usuario cambie de vista 
+        }
+    }
+  }
+  
+export default connect(mapStatetoProps,mapDispatchToProps)(SignIn)
