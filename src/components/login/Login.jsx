@@ -1,5 +1,5 @@
 import React,{ useState }  from 'react';
-import{ makeStyles,Container,Typography, Grid,TextField,CssBaseline,Button,Avatar } from '@material-ui/core';
+import{ makeStyles,Container,Typography, Grid,TextField,CssBaseline,Button,Avatar ,CircularProgress} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {useHistory} from 'react-router-dom'
 import {connect} from 'react-redux';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
   
-function SignIn(props) {
+function Login(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -47,7 +47,7 @@ function SignIn(props) {
         })
     }
     
-    const {login} = props;
+    const {auth,login} = props;
     const [body,setBoyd] = useState({email:'',password:''})
     const history = useHistory();
     const classes = useStyles();
@@ -96,7 +96,7 @@ function SignIn(props) {
                 color="primary"
                 className={classes.submit}
             >
-                Sign In
+                {auth.isLoading === true ?<CircularProgress color="secondary"/> : "Ingresar"}
             </Button>
             <Grid container>
                 <Grid item xs>
@@ -125,4 +125,4 @@ const mapStatetoProps = (state) =>{
     }
   }
   
-export default connect(mapStatetoProps,mapDispatchToProps)(SignIn)
+export default connect(mapStatetoProps,mapDispatchToProps)(Login)

@@ -1,9 +1,9 @@
 import React,{useState} from 'react';
-import { makeStyles,Container,Grid, Checkbox,FormControlLabel,TextField,CssBaseline,Button,Avatar,Typography} from '@material-ui/core';
+import { makeStyles,Container,Grid, Checkbox,FormControlLabel,TextField,CssBaseline,Button,Avatar,Typography,MenuItem,Select,FormControl,InputLabel,CircularProgress} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert} from '@material-ui/lab';
 import { connect } from 'react-redux';
-import {useHistory} from 'react-router-dom'
+import {useHistory} from 'react-router-dom';
 import { RegisterEmployeeAction } from '../../../redux/actions/RegisterAction';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,26 +27,38 @@ const useStyles = makeStyles((theme) => ({
   link:{
     textDecoration:'none',
     color:'blue',
-  }
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  root: {
+    display: 'flex',
+    '& > * + *': {
+      marginLeft: theme.spacing(2),
+    },
+  },
 }));
 
 
-function SignUp(props) {
+function RegisterEmployee(props) {
 
-    const { userState,register} = props;
+    const { registerState,register} = props;
     const history = useHistory();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if(valid.firstName === false && valid.lastName === false && valid.password === false && valid.email === false && valid.confirmPassword === false && user.terms === true){
             setValidForm(true);
-            console.log(userState);
             const newUser = {
                 firstName:user.firstName,
                 lastName:user.lastName,
                 email:user.email,
                 password:user.password,
-                rol:"USER"
+                rol:user.rol
             }
             register(newUser,history);
         } else {
@@ -150,7 +162,7 @@ function SignUp(props) {
     }
 
     const classes = useStyles();
-    const [user,setUser] = useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',terms:false})
+    const [user,setUser] = useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',terms:false,rol:""})
     const [valid,setValid] =useState({password:false,firstName:false, lastName:false,email:false,confirmPassword:false})
     const [leyend,setleyend] =useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:''})
     const [validForm,setValidForm] = useState(null)
@@ -248,6 +260,25 @@ function SignUp(props) {
                     error={valid.confirmPassword}
                     helperText={leyend.confirmPassword}
                 />
+                
+                </Grid>
+                <Grid>
+                <FormControl variant="outlined" className={classes.formControl} >
+                    <InputLabel id="demo-simple-select-outlined-label" >Rol</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    fullWidth
+                    required
+                    value={user.rol}
+                    onChange={handleChange}
+                    label="Rol"
+                    name="rol"
+                    >
+                    <MenuItem value="USER">USER</MenuItem>
+                    <MenuItem value="ADMIN">ADMIN</MenuItem>
+                    </Select>
+                </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                 <FormControlLabel
@@ -266,11 +297,11 @@ function SignUp(props) {
                 color="primary"
                 className={classes.submit}
             >
-                Sign Up
+               {registerState.isLoading === false ? "Registrar empleado" :<CircularProgress color="secondary"/>}
             </Button>
-            {userState.errMess === true && <Alert severity="error">Ocurrio un errror no se pudo realizar el registro</Alert>}
+            {registerState.errMess === true && <Alert severity="error">Ocurrio un errror no se pudo realizar el registro</Alert>}
             {validForm === false && <Alert severity="error">Debes aceptar los terminos y condiciones para registrarte</Alert>}
-            {userState.errMes === false && <Alert severity="success">Te has registrado correctamente</Alert>}
+            {registerState.errMes === false && <Alert severity="success">Te has registrado correctamente</Alert>}
             <Grid container justifyContent="flex-end">
                 <Grid item>
                 </Grid>
@@ -283,7 +314,7 @@ function SignUp(props) {
 
 const mapStatetoProps = (state) =>{
     return{
-        userState:state.register,
+        registerState:state.register,
 
     }
 }
@@ -295,4 +326,4 @@ const mapDispatchToProps = (dispatch) =>{
         }
     }
 }
-export default connect(mapStatetoProps,mapDispatchToProps)(SignUp);
+export default connect(mapStatetoProps,mapDispatchToProps)(RegisterEmployee);

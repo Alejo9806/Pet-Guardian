@@ -1,6 +1,6 @@
 import React from 'react'
 
-const petsAssigned = () => {
+const PetsAssigned = () => {
     return (
         <div>
             <h1>Vista de la lista de mascotas asignadas al veterinario</h1>
@@ -8,4 +8,4 @@ const petsAssigned = () => {
     )
 }
 
-export default petsAssigned
+export default PetsAssigned

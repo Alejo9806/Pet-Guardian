@@ -3,6 +3,7 @@ import jwt from "jwt-decode";
 import {AuthType} from '../actions/AuthAction'
 
 const authState = {
+    isLoading:false,
     isLoggedIn:false,
     user:{
         email:"",
@@ -36,11 +37,15 @@ export const auth= (state = newAuth , action) => {
         case AuthType.LOGIN_SUCCESS:
             const newAuthState = {
                 isLoggedIn:true,
+                isLoading:false,
                 user:action.payload
             };
             axios.defaults.headers.common["Authorization"] = `Bearer ${action.payload.token}`;
             localStorage.setItem("auth",JSON.stringify(newAuthState));
             return newAuthState;
+
+        case AuthType.LOGIN_LOADING  :
+            return {...state, isLoading: true,  user: []}
 
         case AuthType.LOGIN_FAIL:
             return authState;

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const employeeManagement = () => {
+const EmployeeManagement = () => {
     return (
         <div>
             <h1>Vista de administracion de empleados</h1>
@@ -8,4 +8,4 @@ const employeeManagement = () => {
     )
 }
 
-export default employeeManagement
+export default EmployeeManagement

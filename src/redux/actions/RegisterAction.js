@@ -2,11 +2,13 @@ import axios from 'axios'
 
 const RegisterType = {
     REGISTER_SUCCESS: "REGISTER_SUCCESS",
-    REGISTER_FAIL: "REGISTER_FAIL"
+    REGISTER_FAIL: "REGISTER_FAIL",
+    REGISTER_LOADING : "REGISTER_LOADING"
 }
 
 const RegisterEmployeeAction = (userState,history) =>{
     return async (dispatch) => {
+        dispatch(RegisterEmployeeActionLoading(true));
         try {
             const res = await axios.post("user/create",userState);
             const {data} = res;
@@ -20,6 +22,9 @@ const RegisterEmployeeAction = (userState,history) =>{
     }
 }
 
+const RegisterEmployeeActionLoading = () =>({
+    type:RegisterType.REGISTER_LOADING
+})
 
 
-export {RegisterType,RegisterEmployeeAction}
+export {RegisterType,RegisterEmployeeAction, RegisterEmployeeActionLoading}
