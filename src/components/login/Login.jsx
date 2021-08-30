@@ -35,7 +35,6 @@ function Login(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log('Current State is: ' + JSON.stringify(body));
         login(body,history);
     }
     
