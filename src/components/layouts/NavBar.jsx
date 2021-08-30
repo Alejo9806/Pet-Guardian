@@ -144,7 +144,7 @@ const NavBar = (props)=> {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-               <NavLink className={classes.navlink} to="/home">SaveUr ChoPet </NavLink>  
+               <NavLink className={classes.navlink} to="/home">SaveUr ChoPet</NavLink>  
             </Typography>
              {auth.isLoggedIn === true && <Typography variant="h6" className={classes.title}>Hello {auth.user.email}</Typography>}
              {auth.isLoggedIn === false && <NavLink className={classes.navlink} to="/sign-in"><Button color="inherit">Login</Button></NavLink>}
