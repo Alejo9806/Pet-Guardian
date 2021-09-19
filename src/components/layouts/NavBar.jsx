@@ -1,4 +1,8 @@
+//react an router
 import React,{useState} from 'react';
+import {NavLink,Link, useHistory} from 'react-router-dom'
+
+//styles material ui
 import { makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -11,11 +15,15 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
+//icons 
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import SendIcon from '@material-ui/icons/Send';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import PetsIcon from '@material-ui/icons/Pets';
-import {NavLink,Link, useHistory} from 'react-router-dom'
+
+//redux
 import { connect } from 'react-redux';
 import { LogOutAuthAction } from '../../redux/actions/AuthAction';
 
@@ -83,7 +91,7 @@ const Manager =()=> {
                 <ListItemIcon>
                   <EmojiPeopleIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Admiinistrar empleados" style={{ color: '#3D3A39' }}/>          
+                <ListItemText primary="admiinistrar empleados" style={{ color: '#3D3A39' }}/>          
             </StyledMenuItem>
         </Link>
       </div>
@@ -98,7 +106,7 @@ const Veterinarian =()=>{
                 <ListItemIcon>
                   <PetsIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Chandas asignadas" style={{ color: '#3D3A39' }}/>        
+                <ListItemText primary="mascotas asignadas" style={{ color: '#3D3A39' }}/>        
             </StyledMenuItem>
       </Link>
     </div>
@@ -113,13 +121,35 @@ const Financial = () =>{
             <ListItemIcon>
               <InboxIcon fontSize="small" />
             </ListItemIcon>
-            <ListItemText primary="Financias" style={{ color: '#3D3A39' }}/>
+            <ListItemText primary="financias" style={{ color: '#3D3A39' }}/>
           </StyledMenuItem>
       </Link>
     </div>
   );
 };
 
+const Director = () =>{
+  return(
+    <div>
+      <Link className="navLink" to="/pet-management">
+          <StyledMenuItem >
+            <ListItemIcon>
+              <PetsIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="administrar mascotas" style={{ color: '#3D3A39' }}/>
+          </StyledMenuItem>
+      </Link>
+      <Link className="navLink" to="/spa-management">
+        <StyledMenuItem>
+              <ListItemIcon>
+                <EventNoteIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="agendamiento para SPA" style={{ color: '#3D3A39' }}/>
+        </StyledMenuItem>
+      </Link>
+    </div>
+  );
+};
 const NavBar = (props)=> {
   const {auth,logout} =props;
   const history = useHistory();
@@ -163,6 +193,7 @@ const NavBar = (props)=> {
         onClose={handleClose}
         >
          {auth.isLoggedIn === true && auth.user.roles[0] === "ADMIN" ? <Manager/>:null}
+         <Director/>
          {auth.isLoggedIn === true && auth.user.roles[0] === "USER" ? <Veterinarian />:null}
          {auth.isLoggedIn === true && auth.user.roles[0] === "FINANCIAL" ? <Financial />:null}
         </StyledMenu>

@@ -11,6 +11,8 @@ const authState = {
         token:"",
         roles:[],
     },
+    error:null,
+    errMess:""
 }
 
 const getAuthState = () =>{
@@ -38,7 +40,8 @@ export const auth= (state = newAuth , action) => {
             const newAuthState = {
                 isLoggedIn:true,
                 isLoading:false,
-                user:action.payload
+                user:action.payload,
+                error:null
             };
             axios.defaults.headers.common["Authorization"] = `Bearer ${action.payload.token}`;
             localStorage.setItem("auth",JSON.stringify(newAuthState));
@@ -48,14 +51,16 @@ export const auth= (state = newAuth , action) => {
             return {...state, isLoading: true,  user: []}
 
         case AuthType.LOGIN_FAIL:
-            return authState;
+            return {...state, error: true, isLoading: false,errMess:action.payload.message};
         
         case AuthType.LOGOUT_SUCCESS:
             localStorage.removeItem("auth");
+            axios.defaults.headers.common["Authorization"] = `Bearer ${action.payload}`;
             return authState;
                  
         case AuthType.LOGOUT_FAIL:
             localStorage.removeItem("auth");
+            axios.defaults.headers.common["Authorization"] = `Bearer ${action.payload}`;
             return authState;
 
         default:

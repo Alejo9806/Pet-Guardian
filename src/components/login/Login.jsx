@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {useHistory} from 'react-router-dom'
 import {connect} from 'react-redux';
 import { LoginAuthAction } from '../../redux/actions/AuthAction';
-
+import {Alert} from '@material-ui/lab';
 
   
 const useStyles = makeStyles((theme) => ({
@@ -97,6 +97,7 @@ function Login(props) {
             >
                 {auth.isLoading === true ?<CircularProgress color="secondary"/> : "Ingresar"}
             </Button>
+            {auth.error === true && <Alert severity="error">{auth.errMess}</Alert>}
             <Grid container>
                 <Grid item xs>
                 </Grid>

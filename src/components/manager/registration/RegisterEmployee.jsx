@@ -262,8 +262,8 @@ function RegisterEmployee(props) {
                 />
                 
                 </Grid>
-                <Grid>
-                <FormControl variant="outlined" className={classes.formControl} >
+                <Grid item xs={12}>
+                <FormControl variant="outlined" className={classes.formControl} fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label" >Rol</InputLabel>
                     <Select
                     labelId="demo-simple-select-outlined-label"

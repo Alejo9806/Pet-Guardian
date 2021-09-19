@@ -21,7 +21,7 @@ const LoginAuthAction = (loginState,history) => {
             history.push("/")
         } catch (error) {
             console.log(error)
-            dispatch({type:AuthType.LOGIN_FAIL,payload:{}});
+            dispatch({type:AuthType.LOGIN_FAIL,payload:error});
         }
     }
 }

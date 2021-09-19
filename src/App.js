@@ -1,4 +1,5 @@
 import './App.css';
+//Components 
 import Home from './components/Home'
 import Login from './components/login/Login'
 import RegisterEmployee from './components/manager/registration/RegisterEmployee';
@@ -6,6 +7,9 @@ import NavBar from './components/layouts/NavBar';
 import Footer from './components/layouts/Footer';
 import PetsAssigned from './components/veterinarian/PetsAssigned';
 import EmployeeManagement  from './components/manager/EmployeeManagement';
+import PetManagment from './components/director/managmentPets/PetManagment';
+import SpaScheduling from './components/director/sheduleSPA/SpaScheduling'
+
 import PrivateRoute from './components/PrivateRoute';
 import {Switch,Route,Redirect,BrowserRouter} from 'react-router-dom'
 import { Provider } from 'react-redux';
@@ -28,6 +32,8 @@ function App() {
               <PrivateRoute exact path='/sign-up' component={RegisterEmployee} rol={"ADMIN"}/>
               <PrivateRoute exact path="/pets-assigned" component={PetsAssigned} rol={"USER"}/>
               <PrivateRoute exact path="/employee-management" component={EmployeeManagement} rol={"ADMIN"}/>
+              <Route exact path='/pet-management' component={PetManagment} />
+              <Route exact path='/spa-management' component={SpaScheduling} />
               <Redirect to='/home'/>
             </Switch>
             <Footer/>

@@ -16,7 +16,7 @@ export const register= (state = registerState , action) => {
             return{...state, errMess: action.payload};
         
         case RegisterType.REGISTER_LOADING :
-            return {...state, isLoading: true,  registerState: []}
+            return {...state, isLoading: true,  register: []}
         default:
             break;
     }
