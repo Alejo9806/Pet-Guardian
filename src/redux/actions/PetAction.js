@@ -68,7 +68,7 @@ const DeletePetAction = (idPet,history) =>{
 const SearchPetByID = (idPet) =>{
     return async (dispatch)=>{
         try {
-            const res = await axios.get("pet/"+idPet);
+            const res = await axios.get("pet/search/"+idPet);
             const {data} = res;
             console.log(data);
             dispatch({type:PetType.SEARCH_PET,payload:data});           

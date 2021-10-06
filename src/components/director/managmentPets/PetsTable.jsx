@@ -66,7 +66,10 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2, 4, 3),
       height:'100vh',
       width:'50vw',
-      overflow: 'scroll'
+      overflow: 'scroll',
+      '@media(max-width: 700px)' : {
+        width: '100vw'
+      }
     },
 }));
 
@@ -185,7 +188,11 @@ function DataTable(props) {
             paymentMethod:pet.paymentMethod,
             isShower:pet.isShower,
             isEducation:pet.isEducation,
-            isNursery:pet.isNursery
+            isNursery:pet.isNursery,
+            noveltySpa:searchPetState.pet.noveltySpa,
+            noveltyEducation: searchPetState.pet.noveltyEducation,
+            noveltyNursery:searchPetState.pet.noveltyNursery,
+            specifications:searchPetState.pet.specifications
         }
         updatePet(petUpdate,history)
         setOpen(false);

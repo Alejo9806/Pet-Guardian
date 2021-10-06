@@ -1,35 +1,40 @@
 import React from 'react'
-import { makeStyles,Container,Grid,Box } from '@material-ui/core'
+import { makeStyles,Container,Grid,Box} from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 
+import WhatsAppIcon from '@material-ui/icons//WhatsApp';
+
 const useStyles = makeStyles((theme) => ({
     link:{
         textDecoration:'none',
-        color:'black',
-        "&:hover":{
-            textDecoration:"underline"
-        }
+        color:"#fff"
     },
     footer: {
         borderTop: `1px solid ${theme.palette.divider}`,
         marginTop: theme.spacing(8),
-        paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(3),
+        paddingBottom: theme.spacing(0),
         [theme.breakpoints.up('sm')]: {
-          paddingTop: theme.spacing(6),
-          paddingBottom: theme.spacing(6),
+          paddingTop: theme.spacing(1),
+          paddingBottom: theme.spacing(0),
         },
+        backgroundColor:"#000",
+        color:"#fff"
     },
+
+    wpp:{
+      fontSiza:'100px',
+      color:'#4FC95B',
+    }
 }));
 
 function Copyright() {
     return (
-      <Typography variant="body2" color="textSecondary" align="center">
+      <Typography variant="body2" color="common.white" align="center">
         {'Copyright © '}
         <Link color="inherit" to="/home">
-          Your Website
+         Inicio
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}
@@ -39,20 +44,8 @@ function Copyright() {
 
 const footers = [
     {
-      title: 'Company',
-      description: ['Team', 'History', 'Contact us', 'Locations'],
-    },
-    {
-      title: 'Features',
-      description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
-    },
-    {
-      title: 'Resources',
-      description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
-    },
-    {
-      title: 'Legal',
-      description: ['Privacy policy', 'Terms of use'],
+      title: <WhatsAppIcon fontSize="large" />,
+      description: [ 'Telefono: +57 3507839359','Dirección: Crr30 # 34 06', 'Contacto: Manuel.calle@udea.edu.co', 'CC: el carme center local 304'],
     },
   ];
 
@@ -60,22 +53,20 @@ const Footer = () => {
     const classes = useStyles();
     return (
         //Footer 
-            <React.Fragment>
+            <React.Fragment >
                 <CssBaseline />
-                <Container maxWidth="md" component="footer" className={classes.footer}>
-                <Grid container spacing={4} justifyContent="space-evenly">
+                <Container maxWidth={false} component="footer" className={classes.footer}>
+                <Grid container spacing={1} justifyContent="center">
                     {footers.map((footer) => (
-                    <Grid item xs={6} sm={3} key={footer.title}>
-                        <Typography variant="h6" color="textPrimary" gutterBottom>
+                    <Grid item xs={6} sm={6} key={footer.title} align="center">
+                        <Typography variant="h6" gutterBottom className={classes.wpp}>
                         {footer.title}
                         </Typography>
                         <ul>
                         {footer.description.map((item) => (
-                            <li key={item}>
-                            <Link to="/sign-in" variant="subtitle1" color="textSecondary" className={classes.link}>
+                            <Typography variant="subtitle1"  className={classes.link} key={item}>
                                 {item}
-                            </Link>
-                            </li>
+                            </Typography>
                         ))}
                         </ul>
                     </Grid>

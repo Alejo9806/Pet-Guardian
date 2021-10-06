@@ -1,6 +1,5 @@
 import React,{ useState }  from 'react';
 import{ makeStyles,Container,Typography, Grid,TextField,CssBaseline,Button,Avatar ,CircularProgress} from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {useHistory} from 'react-router-dom'
 import {connect} from 'react-redux';
 import { LoginAuthAction } from '../../redux/actions/AuthAction';
@@ -16,7 +15,8 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
+        width:"30%",
+        height:"30%"
     },
     form: {
         width: '100%', // Fix IE 11 issue.
@@ -24,11 +24,25 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
+        backgroundColor:"#fff",
+        color:"#000",
+        fontWeight: "bold",
     },
     link:{
         textDecoration:'none',
         color:'blue',
-    }
+    },
+    input:{
+        backgroundColor:"#fff"
+    },
+    imgLogo:{
+        width:'100%',
+      },  
+      navlink:{
+        color:'#000',
+        fontFamily:'Gemunu Libre, sans-serif',
+        fontSize:'25px'
+      },
 }));
   
 function Login(props) {
@@ -55,14 +69,15 @@ function Login(props) {
         <CssBaseline />
         <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <img src="assets/perfectLogo.png" alt="" className={classes.imgLogo}/>
             </Avatar>
-            <Typography component="h1" variant="h5">
-            Sign in
+            <Typography component="h1" variant="h5" className={classes.navlink} >
+            Iniciar sesión
             </Typography>
             <form className={classes.form}  onSubmit={handleSubmit}>
             <TextField
-                variant="outlined"
+                className={classes.input}
+                variant="filled"
                 margin="normal"
                 required
                 fullWidth
@@ -76,7 +91,8 @@ function Login(props) {
                 onChange={handleChange}
             />
             <TextField
-                variant="outlined"
+                className={classes.input}
+                variant="filled"
                 margin="normal"
                 required
                 fullWidth
@@ -92,7 +108,6 @@ function Login(props) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
                 className={classes.submit}
             >
                 {auth.isLoading === true ?<CircularProgress color="secondary"/> : "Ingresar"}

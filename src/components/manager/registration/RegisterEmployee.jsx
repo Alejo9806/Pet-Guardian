@@ -1,6 +1,5 @@
 import React,{useState} from 'react';
 import { makeStyles,Container,Grid, Checkbox,FormControlLabel,TextField,CssBaseline,Button,Avatar,Typography,MenuItem,Select,FormControl,InputLabel,CircularProgress} from '@material-ui/core';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert} from '@material-ui/lab';
 import { connect } from 'react-redux';
 import {useHistory} from 'react-router-dom';
@@ -15,22 +14,34 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    width:"30%",
+    height:"30%"
+  },
+
+  imgLogo:{
+        width:'100%',
   },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
+    
+  },
+  input:{
+    backgroundColor:"#fff"
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor:"#fff",
+    color:"#000",
+    fontWeight: "bold",
   },
   link:{
     textDecoration:'none',
     color:'blue',
   },
   formControl: {
-    margin: theme.spacing(1),
     minWidth: 120,
+    backgroundColor:"#fff"
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -39,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     '& > * + *': {
       marginLeft: theme.spacing(2),
+    },
+        avatar: {
+        margin: theme.spacing(1),
+        width:"30%",
+        height:"30%"
     },
   },
 }));
@@ -51,14 +67,19 @@ function RegisterEmployee(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if(valid.firstName === false && valid.lastName === false && valid.password === false && valid.email === false && valid.confirmPassword === false && user.terms === true){
+        console.log(user)
+        if(valid.firstName === false && valid.lastName === false && valid.password === false && valid.email === false && valid.confirmPassword === false && user.terms === true && valid.id === false && valid.age === false){
             setValidForm(true);
             const newUser = {
                 firstName:user.firstName,
                 lastName:user.lastName,
                 email:user.email,
                 password:user.password,
-                rol:user.rol
+                rol:user.rol,
+                document:user.id,
+                age:user.age,
+                salary:user.salary,
+                eps:user.eps
             }
             register(newUser,history);
         } else {
@@ -87,6 +108,8 @@ function RegisterEmployee(props) {
         lastName: 'Letras y espacios, pueden llevar acentos.',
         password: 'Su contraseña debe contener al menos una letra mayuscula y un numero y un minimo de 8 caracteres',
         email: 'Debe ser un correo',
+        age:'Debe ser mayor de edad para ingresar',
+        id:'La identificación debe tener 10 digitos'
     }
     const validation = (name) =>{
         if(user.firstName.length > 0){
@@ -133,6 +156,28 @@ function RegisterEmployee(props) {
                 }
             }
         }
+        if(user.age.length > 0){
+            if(name === 'age'){
+                if(user.age >= 18){
+                    valid[name]=false;
+                    leyend[name] ='';
+                }else{
+                    valid[name]=true
+                    leyend[name] =errors.age;
+                }
+            }
+        }
+        if(user.id.length > 0){
+            if(name === 'id'){
+                if(user.id.length === 10){
+                    valid[name]=false;
+                    leyend[name] ='';
+                }else{
+                    valid[name]=true
+                    leyend[name] =errors.id;
+                }
+            }
+        }
     } 
 
 
@@ -162,27 +207,28 @@ function RegisterEmployee(props) {
     }
 
     const classes = useStyles();
-    const [user,setUser] = useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',terms:false,rol:""})
-    const [valid,setValid] =useState({password:false,firstName:false, lastName:false,email:false,confirmPassword:false})
-    const [leyend,setleyend] =useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:''})
+    const [user,setUser] = useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',terms:false,rol:'',id:'',age:'',salary:0,eps:''})
+    const [valid,setValid] =useState({password:false,firstName:false, lastName:false,email:false,confirmPassword:false,id:false,age:false})
+    const [leyend,setleyend] =useState({password:'',email:'',firstName:'',lastName:'',confirmPassword:'',id:'',age:''})
     const [validForm,setValidForm] = useState(null)
     return (
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
             <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+                <img src="assets/perfectLogo.png" alt="" className={classes.imgLogo}/>
             </Avatar>
             <Typography component="h1" variant="h5">
-            Sign up
+            Registrar empleado
             </Typography>
             <form className={classes.form} onSubmit={handleSubmit}>
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                 <TextField
+                    className={classes.input} 
                     autoComplete="fname"
                     name="firstName"
-                    variant="outlined"
+                    variant="filled"
                     required
                     fullWidth
                     type="text"
@@ -198,7 +244,8 @@ function RegisterEmployee(props) {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                 <TextField
-                    variant="outlined"
+                    className={classes.input} 
+                    variant="filled"
                     required
                     fullWidth
                     id="lastName"
@@ -213,8 +260,9 @@ function RegisterEmployee(props) {
                 />
                 </Grid>
                 <Grid item xs={12}>
-                <TextField
-                    variant="outlined"
+                <TextField 
+                    className={classes.input} 
+                    variant="filled"
                     required
                     fullWidth
                     id="email"
@@ -230,7 +278,8 @@ function RegisterEmployee(props) {
                 </Grid>
                 <Grid item xs={12}>
                 <TextField
-                    variant="outlined"
+                    className={classes.input} 
+                    variant="filled"
                     required
                     fullWidth
                     name="password"
@@ -246,7 +295,8 @@ function RegisterEmployee(props) {
                 </Grid>
                 <Grid item xs={12}>
                 <TextField
-                    variant="outlined"
+                    className={classes.input} 
+                    variant="filled"
                     required
                     fullWidth
                     name="confirmPassword"
@@ -259,11 +309,72 @@ function RegisterEmployee(props) {
                     onKeyUp={validatePassword}
                     error={valid.confirmPassword}
                     helperText={leyend.confirmPassword}
-                />
-                
+                />               
                 </Grid>
                 <Grid item xs={12}>
-                <FormControl variant="outlined" className={classes.formControl} fullWidth>
+                    <TextField
+                        className={classes.input} 
+                        variant="filled"
+                        required
+                        fullWidth
+                        name="id"
+                        label="Cedula"
+                        type="text"
+                        id="id"
+                        autoComplete="id"
+                        onChange={handleChange}
+                        onBlur={validation('id')}
+                        error={valid.id}
+                        helperText={leyend.id}
+                    /> 
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        className={classes.input} 
+                        variant="filled"
+                        required
+                        fullWidth
+                        name="age"
+                        label="Edad"
+                        type="number"
+                        id="age"
+                        autoComplete="age"
+                        onChange={handleChange}
+                        onBlur={validation('age')}
+                        error={valid.age}
+                        helperText={leyend.age}
+                    /> 
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        className={classes.input} 
+                        variant="filled"
+                        required
+                        fullWidth
+                        name="eps"
+                        label="EPS"
+                        type="text"
+                        id="eps"
+                        autoComplete="eps"
+                        onChange={handleChange}
+                    /> 
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        className={classes.input} 
+                        variant="filled"
+                        required
+                        fullWidth
+                        name="salary"
+                        label="Salario"
+                        type="number"
+                        id="salary"
+                        autoComplete="salary"
+                        onChange={handleChange}
+                    /> 
+                </Grid>
+                <Grid item xs={12}>
+                <FormControl variant="filled" className={classes.formControl} fullWidth>
                     <InputLabel id="demo-simple-select-outlined-label" >Rol</InputLabel>
                     <Select
                     labelId="demo-simple-select-outlined-label"
@@ -275,8 +386,9 @@ function RegisterEmployee(props) {
                     label="Rol"
                     name="rol"
                     >
-                    <MenuItem value="USER">USER</MenuItem>
-                    <MenuItem value="ADMIN">ADMIN</MenuItem>
+                    <MenuItem value="profesor">PROFESOR</MenuItem>
+                    <MenuItem value="gerente">GERENTE</MenuItem>
+                    <MenuItem value="director">DIRECTOR</MenuItem>
                     </Select>
                 </FormControl>
                 </Grid>
@@ -294,7 +406,6 @@ function RegisterEmployee(props) {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
                 className={classes.submit}
             >
                {registerState.isLoading === false ? "Registrar empleado" :<CircularProgress color="secondary"/>}

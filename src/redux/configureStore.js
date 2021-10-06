@@ -5,6 +5,7 @@ import { auth } from './reducers/auth';
 import {register} from './reducers/register';
 import { registerPet,getAllPet,deletePet,searchPet,updatePet } from './reducers/pet';
 import { deleteAppointment,getAllAppointment,registerAppointment } from './reducers/scheduler';
+import {getAllEmployee,deleteEmployee,searchEmployee,updateEmployee} from './reducers/employee'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -20,7 +21,11 @@ export const ConfigureStore = () => {
             updatePet,
             deleteAppointment,
             getAllAppointment,
-            registerAppointment
+            registerAppointment,
+            getAllEmployee,
+            deleteEmployee,
+            searchEmployee,
+            updateEmployee
         }),
         composeEnhancers(applyMiddleware(thunk,logger))
     );

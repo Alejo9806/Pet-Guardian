@@ -9,11 +9,13 @@ import PetsAssigned from './components/veterinarian/PetsAssigned';
 import EmployeeManagement  from './components/manager/EmployeeManagement';
 import PetManagment from './components/director/managmentPets/PetManagment';
 import SpaScheduling from './components/director/sheduleSPA/SpaScheduling'
+import Calendar from './components/veterinarian/Calendar';
 
 import PrivateRoute from './components/PrivateRoute';
 import {Switch,Route,Redirect,BrowserRouter} from 'react-router-dom'
 import { Provider } from 'react-redux';
 import { ConfigureStore } from './redux/configureStore';
+
 
 
 
@@ -29,11 +31,12 @@ function App() {
             <Switch>
               <Route exact path='/sign-in' component={Login}/>
               <Route exact path='/home' component={Home} />
-              <PrivateRoute exact path='/sign-up' component={RegisterEmployee} rol={"ADMIN"}/>
-              <PrivateRoute exact path="/pets-assigned" component={PetsAssigned} rol={"USER"}/>
-              <PrivateRoute exact path="/employee-management" component={EmployeeManagement} rol={"ADMIN"}/>
-              <Route exact path='/pet-management' component={PetManagment} />
-              <Route exact path='/spa-management' component={SpaScheduling} />
+              <PrivateRoute exact path='/sign-up' component={RegisterEmployee} rol={"ROLE_GERENTE"}/>
+              <PrivateRoute exact path="/pets-assigned" component={PetsAssigned} rol={"ROLE_PROFESOR"}/>
+              <PrivateRoute exact path="/employee-management" component={EmployeeManagement} rol={"ROLE_GERENTE"}/>
+              <PrivateRoute exact path="/pet-management" component={PetManagment} rol={"ROLE_DIRECTOR"}/>
+              <PrivateRoute exact path="/spa-management" component={SpaScheduling} rol={"ROLE_DIRECTOR"}/>
+              <PrivateRoute exact path="/calendar" component={Calendar} rol={"ROLE_PROFESOR"}/>
               <Redirect to='/home'/>
             </Switch>
             <Footer/>

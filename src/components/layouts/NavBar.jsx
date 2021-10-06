@@ -15,14 +15,14 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import Avatar from '@material-ui/core/Avatar';
 //icons 
 import EventNoteIcon from '@material-ui/icons/EventNote';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import SendIcon from '@material-ui/icons/Send';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
 import PetsIcon from '@material-ui/icons/Pets';
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import PersonIcon from '@material-ui/icons/Person';
 //redux
 import { connect } from 'react-redux';
 import { LogOutAuthAction } from '../../redux/actions/AuthAction';
@@ -40,8 +40,14 @@ const useStyles = makeStyles((theme) => ({
   },
   navlink:{
     textDecoration:'none',
-    color:'#fff'
+    color:'#fff',
+    fontFamily:'Gemunu Libre, sans-serif',
+    fontSize:'25px'
+  },
+  AppBar:{
+    backgroundColor:"#000"
   }
+  
 }));
 
 const StyledMenu = withStyles({
@@ -67,9 +73,9 @@ const StyledMenu = withStyles({
 const StyledMenuItem = withStyles((theme) => ({
   root: {
     '&:focus': {
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: "#fff",
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
+        color: "#000"
       },
     },
   },
@@ -106,23 +112,16 @@ const Veterinarian =()=>{
                 <ListItemIcon>
                   <PetsIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="mascotas asignadas" style={{ color: '#3D3A39' }}/>        
+                <ListItemText primary="mascotas" style={{ color: '#3D3A39' }}/>        
             </StyledMenuItem>
       </Link>
-    </div>
-  );
-};
-
-const Financial = () =>{
-  return(
-    <div>
-      <Link className="navLink" to="/">
-          <StyledMenuItem >
-            <ListItemIcon>
-              <InboxIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText primary="financias" style={{ color: '#3D3A39' }}/>
-          </StyledMenuItem>
+      <Link className="navLink" to="/calendar" >
+            <StyledMenuItem>    
+                <ListItemIcon>
+                <EventNoteIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="calendario" style={{ color: '#3D3A39' }}/>        
+            </StyledMenuItem>
       </Link>
     </div>
   );
@@ -155,6 +154,7 @@ const NavBar = (props)=> {
   const history = useHistory();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -163,39 +163,66 @@ const NavBar = (props)=> {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
+  const handleClickUser = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUser = () => {
+    setAnchorElUser(null);
+  };
+
   return (
     <div>
       {/* Barra de navegacion */}
       <div className={classes.root}  >
-        <AppBar position="static">
+        <AppBar position="static" className={classes.AppBar}>
           <Toolbar>
             <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleClick}>
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-               <NavLink className={classes.navlink} to="/home">SaveUr ChoPet </NavLink>  
+               <NavLink className={classes.navlink} to="/home">SAVE YOUR CHOPET</NavLink>  
             </Typography>
-             {auth.isLoggedIn === true && <Typography variant="h6" className={classes.title}>Hello {auth.user.email}</Typography>}
-             {auth.isLoggedIn === false && <NavLink className={classes.navlink} to="/sign-in"><Button color="inherit">Login</Button></NavLink>}
-             {auth.isLoggedIn === true && <Button className={classes.navlink} color="inherit" onClick={()=>{logout(history);}}>Log out</Button>}
+             
+             {auth.isLoggedIn === false && <NavLink className={classes.navlink} to="/sign-in">Ingresar</NavLink>}
+             {auth.isLoggedIn === true && <Button className={classes.navlink} color="inherit"><Avatar onClick={handleClickUser}><PersonIcon fontSize="medium"/></Avatar></Button>}
           </Toolbar>
           
         </AppBar>
       </div>
-
-      {/* Menu */}
-        <StyledMenu
+      <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
         >
-         {auth.isLoggedIn === true && auth.user.roles[0] === "ADMIN" ? <Manager/>:null}
-         <Director/>
-         {auth.isLoggedIn === true && auth.user.roles[0] === "USER" ? <Veterinarian />:null}
-         {auth.isLoggedIn === true && auth.user.roles[0] === "FINANCIAL" ? <Financial />:null}
+         {auth.isLoggedIn === true && auth.user.roles[0] === "ROLE_GERENTE" ? <Manager/>:null}
+         {auth.isLoggedIn === true && auth.user.roles[0] === "ROLE_DIRECTOR" ? <Director/> :null}
+         {auth.isLoggedIn === true && auth.user.roles[0] === "ROLE_PROFESOR" ? <Veterinarian />:null}
+      </StyledMenu>
+      
+      {/* Menu */}
+       <StyledMenu
+        id="customized-menu-user"
+        anchorEl={anchorElUser}
+        keepMounted
+        open={Boolean(anchorElUser)}
+        onClose={handleCloseUser}
+        >
+        <StyledMenuItem >
+          <ListItemIcon>
+            <PetsIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary={`Bienvenido ${auth.user.email}`} style={{ color: '#3D3A39' }}/>
+        </StyledMenuItem>
+        <StyledMenuItem  onClick={()=>{logout(history); setAnchorElUser(null)}}>
+              <ListItemIcon>
+                <ExitToAppIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Salir" style={{ color: '#3D3A39' }}/>
+        </StyledMenuItem>
         </StyledMenu>
     </div>
   );

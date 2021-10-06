@@ -17,12 +17,12 @@ import TableRow from '@material-ui/core/TableRow';
 import { MenuItem,Select,FormControl,InputLabel} from '@material-ui/core';
 import moment from 'moment';
 import { CircularProgress} from '@material-ui/core';
-
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox'
 
 //icons
 import ClearIcon from '@material-ui/icons/Clear';
 import SearchIcon from '@material-ui/icons/Search';
-
 
 //scheduler
 import { ViewState,EditingState, IntegratedEditing} from '@devexpress/dx-react-scheduler';
@@ -36,9 +36,11 @@ import {
   Resources,
   AppointmentTooltip,
 } from '@devexpress/dx-react-scheduler-material-ui';
+
+//redux
 import { connect } from 'react-redux';
 import { DeleteAppointmentAction, GetAllAppointment, RegisterAppointmentAction } from '../../../redux/actions/SchedulerAction';
-import { SearchPetByID } from '../../../redux/actions/PetAction';
+import { SearchPetByID, UpdatePetAction } from '../../../redux/actions/PetAction';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -54,7 +56,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2, 4, 3),
     height:'100vh',
     width:'50vw',
-    overflow: 'scroll'
+    overflow: 'scroll',
+    '@media(max-width: 700px)' : {
+      width: '100vw'
+    }
   },
   table: {
     minWidth: '100%',
@@ -80,11 +85,12 @@ const useStyles = makeStyles((theme) => ({
 
 
 const SpaScheduling = (props) => {
-  const {getAllAppointmentState,registerAppointmentState,getAllAppointment,searchPetState,searchPet,registerAppointment,deleteAppointment} = props;
+  const {getAllAppointmentState,registerAppointmentState,getAllAppointment,searchPetState,searchPet,registerAppointment,deleteAppointment,updatePet} = props;
   const [currentDate,setCurrentDate] = useState(new Date());
   const [resources] = useState([{fieldName: 'location',title: 'Location',instances: [{ id: 'Room 1', text: 'Guarderia central' }]},{fieldName: 'members',title: 'Members',instances: [{ id: 'Manuel Calle Garces', text: 'Manuel Calle Garces' },{id: 'Angie Castañeda', text: 'Angie Castañeda'},{id: 'Alejandro Muñoz', text: 'Alejandro Muñoz'},{id: 'Chope', text: 'Chope'}]}]);
   const [open,setOpen] =useState(false);
-  const [appointmentForm,setAppointmentForm] = useState({title:"",date:moment(new Date()).format("aaaa-MM-ddThh:mm"),hour:"",teacher:"",search:""})
+  const [appointmentForm,setAppointmentForm] = useState({title:"",date:moment(new Date()).format("aaaa-MM-ddThh:mm"),hour:"",teacher:"",search:""});
+  const [appointmentSpecifications,setAppointmentSpecifications] = useState([])
   const classes = useStyles();
  
   const petSearch = (e) =>{
@@ -136,10 +142,23 @@ const SpaScheduling = (props) => {
     })
   }
 
-
+const handleChangeSpecifications= (e)=>{
+  const value = e.target.type === 'checkbox' ? e.target.value : e.target.checked;
+  const specificationsDif = appointmentSpecifications.filter((specification)=>specification.cod === value)
+  if (specificationsDif.length === 0) {
+    setAppointmentSpecifications([
+      ...appointmentSpecifications,{
+        cod:value
+      }])
+  }else{
+    const Newspecifications= appointmentSpecifications.filter((specification)=>specification.cod !== value)
+    setAppointmentSpecifications(Newspecifications)
+  }
+}
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(appointmentForm)       
+    console.log(appointmentForm)     
+    console.log(appointmentSpecifications)  
     const date = new Date(appointmentForm.date)
     if(appointmentForm){
       const newAppointment = {
@@ -150,6 +169,30 @@ const SpaScheduling = (props) => {
           idPet:searchPetState.pet.id,
           namePet:searchPetState.pet.name
       }
+      const petUpdate = {
+        id:searchPetState.pet.id,
+        name:searchPetState.pet.name,
+        breed:searchPetState.pet.breed,
+        weight:searchPetState.pet.weight,
+        age:searchPetState.pet.age,
+        emailOwner:searchPetState.pet.emailOwner,
+        nameOwner:searchPetState.pet.nameOwner,
+        address:searchPetState.pet.address,
+        place:{
+            city:searchPetState.pet.city,
+            department:searchPetState.pet.department,
+            country:searchPetState.pet.country,
+        },
+        paymentMethod:searchPetState.pet.paymentMethod,
+        isShower:searchPetState.pet.isShower,
+        isEducation:searchPetState.pet.isEducation,
+        isNursery:searchPetState.pet.isNursery,
+        noveltySpa:searchPetState.pet.noveltySpa,
+        noveltyEducation: searchPetState.pet.noveltyEducation,
+        noveltyNursery:searchPetState.pet.noveltyNursery,
+        specifications:appointmentSpecifications
+      }
+      updatePet(petUpdate)
       registerAppointment(newAppointment);
       setOpen(false);
    }
@@ -307,7 +350,40 @@ const SpaScheduling = (props) => {
                               </Table>
                             </TableContainer>             
                           </Grid>
-                        </Paper>                            
+                        </Paper>     
+                        <Typography className={classes.title}>
+                            ESPECIFICACIONES
+                        </Typography>       
+                          <Grid item xs={12}>
+                            <FormControlLabel                                    
+                                control={<Checkbox color="secondary" name="1" value="1" onChange={handleChangeSpecifications} />}
+                                label="Pintar garritas"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox color="secondary" name="2"  value="2" onChange={handleChangeSpecifications}/>}
+                                label="Agregar pañuelo"
+                            />
+                            <FormControlLabel
+                                control={<Checkbox color="secondary" name="3"  value="3" onChange={handleChangeSpecifications}/>}
+                                label="Cepillar dientes"
+                        
+                            />
+                            <FormControlLabel
+                                control={<Checkbox color="secondary" name="4"  value="4" onChange={handleChangeSpecifications}/>}
+                                label="Corte de pelo"
+                        
+                            />
+                            <FormControlLabel
+                                control={<Checkbox color="secondary" name="5"  value="5" onChange={handleChangeSpecifications}/>}
+                                label="Locion"
+                        
+                            />
+                            <FormControlLabel
+                                control={<Checkbox color="secondary" name="6" value="6"  onChange={handleChangeSpecifications}/>}
+                                label="Purgar"
+                        
+                            />
+                          </Grid>
                       </Grid>
                     </Grid>
                   </form>
@@ -376,7 +452,10 @@ const mapDispatchToProps = (dispatch) =>{
       },
       deleteAppointment:(idAppointment)=>{
         dispatch(DeleteAppointmentAction(idAppointment))
-      }
+      },
+      updatePet:(petUpdate) => {
+        dispatch(UpdatePetAction(petUpdate)) 
+      }, 
      
   }
 }
